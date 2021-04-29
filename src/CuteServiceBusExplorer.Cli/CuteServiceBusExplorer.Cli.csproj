@@ -5,6 +5,7 @@
         <LangVersion>9</LangVersion>
         <AssemblyName>csbx</AssemblyName>
         <OutputType>Exe</OutputType>
+        <Version>0.0.0.0-development</Version>
     </PropertyGroup>
 
     <ItemGroup>
