@@ -47,7 +47,7 @@ namespace CuteServiceBusExplorer.Cli
             catch(Exception ex)
             {
                 serilog.Fatal(ex, "Uncaught exception");
-                return 1;
+                return (int)ExitCodes.GeneralError;
             }
         }
     }

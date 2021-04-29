@@ -8,7 +8,7 @@ namespace CuteServiceBusExplorer.Cli
     [Command(
         Name = "csbx", 
         UnrecognizedArgumentHandling = UnrecognizedArgumentHandling.Throw , 
-        OptionsComparison = System.StringComparison.InvariantCultureIgnoreCase )]
+        OptionsComparison = System.StringComparison.InvariantCultureIgnoreCase)]
     [VersionOptionFromMember("--version", MemberName = nameof(GetVersion))]
     /*[Subcommand(
         typeof(LoginCmd),
@@ -19,12 +19,12 @@ namespace CuteServiceBusExplorer.Cli
 
         protected override Task<int> OnExecute(CommandLineApplication app)
         {
-            // this shows help even if the --help option isn't specified
-            app.ShowHelp();            
-            return Task.FromResult(0);
+            app.ShowHint();
+            return Task.FromResult((int)ExitCodes.CommandLineUsageError);
         }
 
         private static string GetVersion()
             => typeof(RootCommand).Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion;
+        //See: https://edi.wang/post/2018/9/27/get-app-version-net-core
     }
 }
