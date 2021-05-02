@@ -2,7 +2,7 @@ using System.Threading.Tasks;
 using McMaster.Extensions.CommandLineUtils;
 using Microsoft.Extensions.Logging;
 
-namespace CuteServiceBusExplorer.Cli
+namespace CuteServiceBusExplorer.Cli.Commands
 {
     [HelpOption("--help")]
     public abstract class BaseCommand

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Threading.Tasks;
+using CuteServiceBusExplorer.Cli.Commands;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -42,7 +43,7 @@ namespace CuteServiceBusExplorer.Cli
             
             try
             {
-                return await builder.RunCommandLineApplicationAsync<RootCommand>(args);
+                return await builder.RunCommandLineApplicationAsync<Root>(args);
             }
             catch(Exception ex)
             {
