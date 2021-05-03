@@ -1,6 +1,8 @@
 using System.Threading.Tasks;
+using CuteServiceBusExplorer.Interface;
 using McMaster.Extensions.CommandLineUtils;
 using Microsoft.Extensions.Logging;
+using Spectre.Console;
 
 namespace CuteServiceBusExplorer.Cli.Commands.Connections
 {
@@ -11,14 +13,49 @@ namespace CuteServiceBusExplorer.Cli.Commands.Connections
         OptionsComparison = System.StringComparison.InvariantCultureIgnoreCase)]
     public class List : BaseCommand
     {
-        public List(ILogger<List> logger, IConsole console) : base(logger, console)
+        private readonly IConnectionService _connectionService;
+        public List(IConnectionService connectionService, ILogger<List> logger, IConsole console) : base(logger, console)
         {
+            _connectionService = connectionService;
         }
 
-        protected override Task<int> OnExecute(CommandLineApplication app)
+        protected override async Task<int> OnExecute(CommandLineApplication app)
         {
-            app.ShowHelp();
-            return Task.FromResult((int) ExitCodes.CommandLineUsageError);
+            var connectionsResponse = await _connectionService.GetConnectionsAsync();
+
+            RenderConnections(connectionsResponse);
+
+            return await Task.FromResult((int) ExitCodes.Success);
+        }
+
+        private void RenderConnections(GetConnectionsResponse connectionsResponse)
+        {
+            var table = new Table();
+
+            var keyColumn = new TableColumn("Key");
+            var nameColumn = new TableColumn("Name");
+            var namespaceColumn = new TableColumn("Namespace");
+            var uriColumn = new TableColumn("URI");
+
+            uriColumn.NoWrap();
+            
+            table.AddColumn(keyColumn);
+            table.AddColumn(nameColumn);
+            table.AddColumn(namespaceColumn);
+            table.AddColumn(uriColumn);
+            
+            table.Border = TableBorder.Minimal;
+            
+            foreach (var connection in connectionsResponse.Connections)
+            {
+                var keyValue = new Markup($"[blue]{connection.Key}[/]");
+                var nameValue = new Markup($"[grey]{connection.Name}[/]");
+                var namespaceValue = new Markup($"[grey]{connection.Namespace}[/]");
+                var uriValue = new Markup($"[grey]{connection.Uri}[/]");
+                table.AddRow(keyValue, nameValue, namespaceValue, uriValue);
+            }
+            
+            AnsiConsole.Render(table);
         }
     }
 }

@@ -21,4 +21,8 @@
       <PackageReference Include="Spectre.Console" Version="0.39.0" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\CuteServiceBusExplorer.Interface\CuteServiceBusExplorer.Interface.csproj" />
+    </ItemGroup>
+
 </Project>
