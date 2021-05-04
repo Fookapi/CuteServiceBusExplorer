@@ -18,11 +18,12 @@ namespace CuteServiceBusExplorer.Cli.Commands.Connections
         private readonly IConnectionService _connectionService;
         
         [Required]
-        [Argument(order: 0, Description = "Keys of the connection to remove from the connection store.", Name = "keys", ShowInHelpText = true)]
+        [Argument(order: 0, Description = "One or more keys for connections to remove from the connection store.", Name = "keys", ShowInHelpText = true)]
         public string[] ConnectionKeys { get; set; }
         
         [Option(CommandOptionType.NoValue, ShortName = "f", LongName = "force", Description = "Force. Don't prompt for confirmation.", ShowInHelpText = true)]
         public bool Force { get; set; } = false;
+        
         public Remove(IConnectionService connectionService, ILogger<Remove> logger, IConsole console) : base(logger, console)
         {
             _connectionService = connectionService;
