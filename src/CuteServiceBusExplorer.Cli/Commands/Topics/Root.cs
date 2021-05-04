@@ -14,7 +14,7 @@ namespace CuteServiceBusExplorer.Cli.Commands.Topics
     {
         public Root(ILogger<Root> logger, IConsole console) : base(logger, console) {}
         
-        protected override Task<int> OnExecute(CommandLineApplication app)
+        protected override Task<int> OnExecuteAsync(CommandLineApplication app)
         {
             app.ShowHelp();
             return Task.FromResult((int)ExitCodes.CommandLineUsageError);

@@ -22,7 +22,7 @@ namespace CuteServiceBusExplorer.Cli.Commands.Connections
             _connectionService = connectionService;
         }
 
-        protected override async Task<int> OnExecute(CommandLineApplication app)
+        protected override async Task<int> OnExecuteAsync(CommandLineApplication app)
         {
             var connectionsResponse = await _connectionService.GetConnectionsAsync();
 

@@ -17,7 +17,7 @@ namespace CuteServiceBusExplorer.Cli.Commands
             Console = console;
         }
 
-        protected virtual Task<int> OnExecute(CommandLineApplication app)
+        protected virtual Task<int> OnExecuteAsync(CommandLineApplication app)
         {            
             app.ShowHelp();
             return Task.FromResult(0);
