@@ -14,6 +14,9 @@ namespace CuteServiceBusExplorer.Cli.Commands.Connections
     public class List : BaseCommand
     {
         private readonly IConnectionService _connectionService;
+        
+        [Option(CommandOptionType.NoValue, ShortName = "u", LongName = "unformatted", Description = "Don't show formatted output, only print keys", ShowInHelpText = true)]
+        public bool Unformatted { get; set; } = false;
         public List(IConnectionService connectionService, ILogger<List> logger, IConsole console) : base(logger, console)
         {
             _connectionService = connectionService;
@@ -23,12 +26,23 @@ namespace CuteServiceBusExplorer.Cli.Commands.Connections
         {
             var connectionsResponse = await _connectionService.GetConnectionsAsync();
 
-            RenderConnections(connectionsResponse);
+            if (Unformatted)
+                RenderPlainConnections(connectionsResponse);
+            else
+                RenderFormattedConnections(connectionsResponse);
 
             return await Task.FromResult((int) ExitCodes.Success);
         }
 
-        private void RenderConnections(GetConnectionsResponse connectionsResponse)
+        private void RenderPlainConnections(GetConnectionsResponse connectionsResponse)
+        {
+            foreach (var connection in connectionsResponse.Connections)
+            {
+                AnsiConsole.WriteLine(connection.Key);
+            }
+        }
+
+        private void RenderFormattedConnections(GetConnectionsResponse connectionsResponse)
         {
             var table = new Table();
 
