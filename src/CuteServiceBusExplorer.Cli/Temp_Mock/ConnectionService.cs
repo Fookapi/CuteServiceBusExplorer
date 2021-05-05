@@ -74,5 +74,14 @@ namespace CuteServiceBusExplorer.Cli.Temp_Mock
             
             return Task.FromResult(result);
         }
+
+        public Task<IEnumerable<string>> PurgeConnectionsAsync()
+        {
+            IEnumerable<string> result = connections.Select(c => c.Key).ToArray();
+            
+            connections.Clear();
+
+            return Task.FromResult(result);
+        }
     }
 }
