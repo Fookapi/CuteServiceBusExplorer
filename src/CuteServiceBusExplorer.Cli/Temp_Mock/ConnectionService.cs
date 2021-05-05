@@ -7,7 +7,7 @@ namespace CuteServiceBusExplorer.Cli.Temp_Mock
 {
     public class ConnectionService : IConnectionService
     {
-        private List<CuteServiceBusExplorer.Interface.Connection> connections = new List<Connection>
+        private Dictionary<string, CuteServiceBusExplorer.Interface.Connection> connections = (new List<Connection>
         {
             new CuteServiceBusExplorer.Interface.Connection
             {
@@ -37,11 +37,11 @@ namespace CuteServiceBusExplorer.Cli.Temp_Mock
                 Uri = "https://myproduction.servicebus.azure.net",
                 Namespace = "myproduction"
             }
-        };
+        }).ToDictionary(v=> v.Key);
         public Task<GetConnectionsResponse> GetConnectionsAsync()
         {
             var result = new GetConnectionsResponse();
-            result.Connections = connections.ToArray();
+            result.Connections = connections.Values.ToArray();
 
             return Task.FromResult(result);
         }
@@ -49,28 +49,28 @@ namespace CuteServiceBusExplorer.Cli.Temp_Mock
         public Task<GetConnectionsResponse> GetConnectionsAsync(IEnumerable<string> keys)
         {
             var result = new GetConnectionsResponse();
-            result.Connections = connections.Where(c => keys.Contains(c.Key)).ToArray();
+            result.Connections = connections.Where(c => keys.Contains(c.Key)).Select(e => e.Value).ToArray();
 
             return Task.FromResult(result);
         }
 
         public Task<GetConnectionResponse> GetConnectionAsync(string key)
         {
-            var conn = connections.SingleOrDefault(c => c.Key == key);
+            Connection conn = null;
+            connections.TryGetValue(key, out conn);
+            
             var result = new GetConnectionResponse();
             result.Connection = conn;
 
             return Task.FromResult(result);
         }
 
-        public Task<bool> RemoveConnectionAsync(string key)
+        public Task<bool> TryRemoveConnectionAsync(string key)
         {
-            var conn = connections.SingleOrDefault(c => c.Key == key);
-
-            if (conn == null)
+            if (!connections.TryGetValue(key, out var conn))
                 return Task.FromResult(false);
 
-            var result = connections.Remove(conn);
+            var result = connections.Remove(key);
             
             return Task.FromResult(result);
         }
@@ -81,6 +81,22 @@ namespace CuteServiceBusExplorer.Cli.Temp_Mock
             
             connections.Clear();
 
+            return Task.FromResult(result);
+        }
+
+        public Task<bool> TryAddConnection(string key, string name, string connectionString)
+        {
+            //See links in: https://github.com/Azure/azure-service-bus-dotnet/issues/651
+            var conn = new CuteServiceBusExplorer.Interface.Connection
+            {
+                Key = key,
+                Name = name,
+                Uri = "https://othernamespace.servicebus.azure.net",
+                Namespace = "othernamespace"
+            };
+            
+            var result = connections.TryAdd(conn.Key, conn);
+            
             return Task.FromResult(result);
         }
     }

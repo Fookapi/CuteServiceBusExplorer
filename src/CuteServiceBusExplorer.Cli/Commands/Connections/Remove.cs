@@ -65,7 +65,7 @@ namespace CuteServiceBusExplorer.Cli.Commands.Connections
             
             foreach (var con in connections.Connections)
             {
-                if(await _connectionService.RemoveConnectionAsync(con.Key))
+                if(await _connectionService.TryRemoveConnectionAsync(con.Key))
                     AnsiConsole.MarkupLine($"[grey]{con.Key}[/]");
                 else
                 {
