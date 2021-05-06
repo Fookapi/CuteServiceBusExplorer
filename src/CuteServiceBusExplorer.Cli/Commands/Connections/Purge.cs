@@ -31,7 +31,7 @@ namespace CuteServiceBusExplorer.Cli.Commands.Connections
             if (!connections.Connections.Any())
             {
                 AnsiConsole.MarkupLine("[darkorange]No connections found to purge.[/]");
-                return await Task.FromResult((int) ExitCodes.Success);
+                return await ExitCodesResult.TaskForSuccess;
             }
             
             bool confirmed;
@@ -44,7 +44,7 @@ namespace CuteServiceBusExplorer.Cli.Commands.Connections
             if (!confirmed)
             {
                 AnsiConsole.MarkupLine("[default]Nothing removed.[/]");
-                return await Task.FromResult((int) ExitCodes.Success);
+                return await ExitCodesResult.TaskForSuccess;
             }
 
             var keysRemoved = await _connectionService.PurgeConnectionsAsync();
@@ -54,7 +54,7 @@ namespace CuteServiceBusExplorer.Cli.Commands.Connections
                 AnsiConsole.MarkupLine($"[grey]{key}[/]");
             }
             
-            return await Task.FromResult((int) ExitCodes.Success);
+            return await ExitCodesResult.TaskForSuccess;
         }
     }
 }

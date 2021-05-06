@@ -6,7 +6,6 @@ using Spectre.Console;
 
 namespace CuteServiceBusExplorer.Cli.Commands.Connections
 {
-
     [Command(
         Name = "list",
         UnrecognizedArgumentHandling = UnrecognizedArgumentHandling.Throw,
@@ -31,7 +30,7 @@ namespace CuteServiceBusExplorer.Cli.Commands.Connections
             else
                 RenderFormattedConnections(connectionsResponse);
 
-            return await Task.FromResult((int) ExitCodes.Success);
+            return await ExitCodesResult.TaskForSuccess;
         }
 
         private void RenderPlainConnections(GetConnectionsResponse connectionsResponse)

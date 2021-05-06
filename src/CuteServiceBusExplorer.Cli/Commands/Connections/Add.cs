@@ -53,10 +53,10 @@ namespace CuteServiceBusExplorer.Cli.Commands.Connections
             if (result)
             {
                 AnsiConsole.MarkupLine($"[grey]{key}[/]");
-                return await Task.FromResult((int) ExitCodes.Success);
+                return await ExitCodesResult.TaskForSuccess;
             }
 
-            return await Task.FromResult((int) ExitCodes.GeneralError);
+            return await ExitCodesResult.TaskForGeneralError;
         }
 
         private bool ValidateNameFormat(string name)

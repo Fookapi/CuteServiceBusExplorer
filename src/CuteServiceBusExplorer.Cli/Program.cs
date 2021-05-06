@@ -42,6 +42,7 @@ namespace CuteServiceBusExplorer.Cli
                         }  
                     });
                     services.AddTransient<IConnectionService, Temp_Mock.ConnectionService>();
+                    services.AddTransient<ITopicService, Temp_Mock.TopicService>();
                 });
             
             try
