@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using CuteServiceBusExplorer.Infrastructure;
 using CuteServiceBusExplorer.Interface;
 using McMaster.Extensions.CommandLineUtils;
 using Microsoft.Extensions.Logging;
@@ -51,17 +52,23 @@ namespace CuteServiceBusExplorer.Cli.Commands.Topics
         private void RenderFormattedTopics(GetTopicsResponse topicsResponse)
         {
             AnsiConsole.MarkupLine($"Connection Key: [blue]{ConnectionKey}[/]");
-            //AnsiConsole.WriteLine();
             
             var table = new Table();
 
             var nameColumn = new TableColumn("Name");
-            //var namespaceColumn = new TableColumn("Namespace");
-            //var uriColumn = new TableColumn("URI");
+            var currentSizeColumn = new TableColumn("Current Size");
+            var maxSizeColumn = new TableColumn("Maximum Size");
+            var freeSpaceColumn = new TableColumn("Free Space");
+            var autoDeleteColumn = new TableColumn("Time To Auto Delete");
+            var messageTtlColumn = new TableColumn("Message Time to Live");
+            
 
             table.AddColumn(nameColumn);
-            //table.AddColumn(namespaceColumn);
-            //table.AddColumn(uriColumn);
+            table.AddColumn(freeSpaceColumn);
+            table.AddColumn(currentSizeColumn);
+            table.AddColumn(maxSizeColumn);
+            table.AddColumn(messageTtlColumn);
+            table.AddColumn(autoDeleteColumn);
 
             table.Border = TableBorder.Minimal;
 
@@ -69,9 +76,13 @@ namespace CuteServiceBusExplorer.Cli.Commands.Topics
             {
                 
                 var nameValue = new Markup($"[blue]{topic.Name}[/]");
-                //var namespaceValue = new Markup($"[grey]{topic.Namespace}[/]");
-                //var uriValue = new Markup($"[grey]{topic.Uri}[/]");
-                table.AddRow(nameValue);
+                var currentSizeValue = new Markup($"[grey]{ByteHelper.BytesToFriendlyString(topic.CurrentSizeBytes)}[/]");
+                var maxSizeValue = new Markup($"[grey]{ByteHelper.BytesToFriendlyString(topic.MaximumSizeBytes)}[/]");
+                var freeSpaceValue = new Markup($"[default]{topic.FreeSpace:P2}[/]");
+                var autoDeleteValue = new Markup($"[grey]{(topic.AutoDelete.HasValue ? topic.AutoDelete.Value.ToString("G") : "n/a")}[/]");
+                var messageTtlValue = new Markup($"[grey]{topic.MessageTimeToLive:G}[/]");
+                
+                table.AddRow(nameValue, freeSpaceValue, currentSizeValue, maxSizeValue, messageTtlValue, autoDeleteValue);
             }
 
             AnsiConsole.Render(table);

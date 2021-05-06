@@ -23,6 +23,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\CuteServiceBusExplorer.Interface\CuteServiceBusExplorer.Interface.csproj" />
+      <ProjectReference Include="..\CuteServiceBusExplorer\CuteServiceBusExplorer.csproj" />
     </ItemGroup>
 
 </Project>

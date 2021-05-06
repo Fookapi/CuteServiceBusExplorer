@@ -8,8 +8,4 @@
       <PackageReference Include="Azure.Messaging.ServiceBus" Version="7.2.0-beta.2" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Infrastructure" />
-    </ItemGroup>
-
 </Project>
