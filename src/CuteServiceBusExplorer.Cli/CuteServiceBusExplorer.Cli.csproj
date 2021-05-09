@@ -23,6 +23,19 @@
 
     <ItemGroup>
       <ProjectReference Include="..\CuteServiceBusExplorer.Interface\CuteServiceBusExplorer.Interface.csproj" />
+      <ProjectReference Include="..\CuteServiceBusExplorer\CuteServiceBusExplorer.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Remove="Temp_Mock\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Remove="Temp_Mock\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="Temp_Mock\**" />
     </ItemGroup>
 
 </Project>

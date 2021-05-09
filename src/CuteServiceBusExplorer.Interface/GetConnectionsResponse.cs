@@ -2,6 +2,6 @@ namespace CuteServiceBusExplorer.Interface
 {
     public class GetConnectionsResponse
     {
-        public Connection[] Connections { get; set; }
+        public Connection[] Connections { get; init; }
     }
 }

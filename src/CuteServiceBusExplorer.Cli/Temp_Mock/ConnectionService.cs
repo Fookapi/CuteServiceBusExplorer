@@ -7,6 +7,7 @@ namespace CuteServiceBusExplorer.Cli.Temp_Mock
 {
     public class ConnectionService : IConnectionService
     {
+
         private List<CuteServiceBusExplorer.Interface.Connection> connections = new List<Connection>
         {
             new CuteServiceBusExplorer.Interface.Connection

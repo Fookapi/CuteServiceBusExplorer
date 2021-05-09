@@ -1,8 +1,10 @@
 ﻿using System;
 using System.IO;
 using System.Threading.Tasks;
+using CuteServiceBusExplorer.App;
 using CuteServiceBusExplorer.Cli.Commands;
-using CuteServiceBusExplorer.Cli.Temp_Mock;
+using CuteServiceBusExplorer.Domain;
+using CuteServiceBusExplorer.Infra;
 using CuteServiceBusExplorer.Interface;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -41,7 +43,8 @@ namespace CuteServiceBusExplorer.Cli
                             config.SetMinimumLevel(Enum.Parse<LogLevel>(minimumLevel));                            
                         }  
                     });
-                    services.AddTransient<IConnectionService, Temp_Mock.ConnectionService>();
+                    services.AddTransient<IConnectionService, ServiceBusExplorerService>();
+                    services.AddTransient<IConnectionStore, ConnectionStore>();
                 });
             
             try
