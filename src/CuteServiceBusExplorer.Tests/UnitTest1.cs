@@ -18,11 +18,15 @@ namespace CuteServiceBusExplorer.Tests
         [Test]
         public async Task Test1()
         {
+            ServiceBusTopicService serviceBusTopicService = new ServiceBusTopicService(new ConnectionStore());
+
+            var topics = await serviceBusTopicService.GetTopicsAsync("1");
             //var serviceBusConnectionString = Environment.GetEnvironmentVariable("SBC");
 
-            IConnectionService connectionService = new ServiceBusExplorerService(new ConnectionStore());
-            var                test              = await connectionService.GetConnectionsAsync();
-            var                conn              = test.Connections;
+            //IConnectionService     connectionService = new ServiceBusConnectionService(new ConnectionStore());
+            
+            // var                    test                   = await connectionService.GetConnectionsAsync();
+            // var                    conn                   = test.Connections;
             // using (ServiceBusExplorer serviceBusExplorer = await ServiceBusExplorer.CreateAsync(serviceBusConnectionString))
             // {
             //     var topics = serviceBusExplorer.GetTopics();

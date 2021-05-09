@@ -8,8 +8,7 @@ namespace CuteServiceBusExplorer.Cli.Commands.Topics
         Name = "topics", 
         UnrecognizedArgumentHandling = UnrecognizedArgumentHandling.Throw , 
         OptionsComparison = System.StringComparison.InvariantCultureIgnoreCase)]
-    /*[Subcommand(
-        typeof(List), typeof(Add), typeof(Remove), typeof(Purge))]*/
+    [Subcommand(typeof(List))]
     public class Root : BaseCommand
     {
         public Root(ILogger<Root> logger, IConsole console) : base(logger, console) {}

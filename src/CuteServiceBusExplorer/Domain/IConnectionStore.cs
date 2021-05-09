@@ -9,5 +9,7 @@ namespace CuteServiceBusExplorer.Domain
         Task<Connection[]> GetConnectionsAsync(IEnumerable<string> keys);
         Task<Connection> GetConnectionAsync(string key);
         Task<bool> RemoveAsync(string key);
+        Task<string[]> Purge();
+        Task AddConnection(string key, string name, string connectionString);
     }
 }

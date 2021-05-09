@@ -43,8 +43,8 @@ namespace CuteServiceBusExplorer.Cli
                             config.SetMinimumLevel(Enum.Parse<LogLevel>(minimumLevel));                            
                         }  
                     });
-                    services.AddTransient<IConnectionService, ServiceBusExplorerService>();
-                    services.AddTransient<IConnectionStore, ConnectionStore>();
+                    services.AddTransient<IConnectionService, Temp_Mock.ConnectionService>();
+                    services.AddTransient<ITopicService, Temp_Mock.TopicService>();
                 });
             
             try

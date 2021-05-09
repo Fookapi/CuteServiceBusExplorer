@@ -65,9 +65,29 @@ namespace CuteServiceBusExplorer.Infra
 
             var success = connections.Remove(connectionToRemove);
 
-            SaveConnections(connections);
+            await SaveConnections(connections);
             
             return success;
+        }
+
+        public async Task<string[]> Purge()
+        {
+            var connections = await GetConnections();
+
+            var keysPurged = connections?.Select(c => c.Key);
+
+            await SaveConnections(new List<Connection>());
+
+            return keysPurged.ToArray();
+        }
+
+        public async Task AddConnection(string key, string name, string uri)
+        {
+            var connections = await GetConnections();
+            
+            connections.Add(new Connection(key, name, uri));
+
+            await SaveConnections(connections);
         }
 
         private async Task<ICollection<Connection>> GetConnections()

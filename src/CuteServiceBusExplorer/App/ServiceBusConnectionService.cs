@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -7,11 +8,11 @@ using Connection = CuteServiceBusExplorer.Interface.Connection;
 
 namespace CuteServiceBusExplorer.App
 {
-    public class ServiceBusExplorerService:IConnectionService
+    public class ServiceBusConnectionService : IConnectionService
     {
         private readonly IConnectionStore _connectionStore;
 
-        public ServiceBusExplorerService(IConnectionStore connectionStore)
+        public ServiceBusConnectionService(IConnectionStore connectionStore)
         {
             _connectionStore = connectionStore;
         }
@@ -26,11 +27,11 @@ namespace CuteServiceBusExplorer.App
                 {
                     Key       = connection.Key,
                     Name      = connection.Name,
-                    Namespace = connection.Namespace,
-                    Uri       = connection.Uri
+                    Namespace = string.Empty,
+                    Uri       = connection.ConnectionString
                 }).ToArray()
             };
-            
+
             return response;
         }
 
@@ -44,11 +45,11 @@ namespace CuteServiceBusExplorer.App
                 {
                     Key       = connection.Key,
                     Name      = connection.Name,
-                    Namespace = connection.Namespace,
-                    Uri       = connection.Uri
+                    Namespace = string.Empty,
+                    Uri       = connection.ConnectionString
                 }).ToArray()
             };
-            
+
             return response;
         }
 
@@ -61,19 +62,52 @@ namespace CuteServiceBusExplorer.App
                 {
                     Key       = connection.Key,
                     Name      = connection.Name,
-                    Namespace = connection.Namespace,
-                    Uri       = connection.Uri
+                    Namespace = string.Empty,
+                    Uri       = connection.ConnectionString
                 }
             };
-            
+
             return response;
         }
 
-        public async Task<bool> RemoveConnectionAsync(string key)
+        public async Task<bool> TryRemoveConnectionAsync(string key)
         {
-            bool result = await _connectionStore.RemoveAsync(key);
+            try
+            {
+                bool result = await _connectionStore.RemoveAsync(key);
 
-            return result;
+                return result;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+
+                return false;
+            }
+        }
+
+        public async Task<IEnumerable<string>> PurgeConnectionsAsync()
+        {
+            var keys = await _connectionStore.Purge();
+
+            return keys;
+        }
+
+        public async Task<bool> TryAddConnection(string key, string name, string connectionString)
+        {
+            try
+            {
+                await _connectionStore.AddConnection(key, name, connectionString);
+                
+                return true;
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                
+                return false;
+            }
         }
     }
 }

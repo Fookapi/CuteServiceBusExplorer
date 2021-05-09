@@ -35,7 +35,7 @@ namespace CuteServiceBusExplorer.Cli.Commands.Connections
             if (!args.Any())
             {
                 AnsiConsole.MarkupLine("[darkorange]Please provide at least one connection key as an argument.[/]");
-                return await Task.FromResult((int) ExitCodes.CommandLineUsageError);
+                return await ExitCodesResult.TaskForCommandLineUsageError;
             }
 
             var connections = await _connectionService.GetConnectionsAsync(args);
@@ -43,7 +43,7 @@ namespace CuteServiceBusExplorer.Cli.Commands.Connections
             if (!connections.Connections.Any())
             {
                 AnsiConsole.MarkupLine("[darkorange]No connections found matching the provided keys.[/]");
-                return await Task.FromResult((int) ExitCodes.Success);
+                return await ExitCodesResult.TaskForSuccess;
             }
             else if (connections.Connections.Length != args.Length)
             {
@@ -60,21 +60,21 @@ namespace CuteServiceBusExplorer.Cli.Commands.Connections
             if (!confirmed)
             {
                 AnsiConsole.MarkupLine("[default]Nothing removed.[/]");
-                return await Task.FromResult((int) ExitCodes.Success);
+                return await ExitCodesResult.TaskForSuccess;
             }
             
             foreach (var con in connections.Connections)
             {
-                if(await _connectionService.RemoveConnectionAsync(con.Key))
+                if(await _connectionService.TryRemoveConnectionAsync(con.Key))
                     AnsiConsole.MarkupLine($"[grey]{con.Key}[/]");
                 else
                 {
                     AnsiConsole.MarkupLine($"[bold red]Error: Could not remove key '{con.Key}'[/]");
-                    return await Task.FromResult((int) ExitCodes.GeneralError);
+                    return await ExitCodesResult.TaskForGeneralError;
                 }
             }
 
-            return await Task.FromResult((int) ExitCodes.Success);
+            return await ExitCodesResult.TaskForSuccess;
         }
     }
 }

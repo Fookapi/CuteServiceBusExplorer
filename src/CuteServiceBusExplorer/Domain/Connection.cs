@@ -4,15 +4,13 @@ namespace CuteServiceBusExplorer.Domain
     {
         public string Key { get; }
         public string Name { get; }
-        public string Uri { get;  }
-        public string Namespace { get; }
+        public string ConnectionString { get; }
 
-        public Connection(string key, string name, string uri, string @namespace)
+        public Connection(string key, string name, string connectionString)
         {
-            Key       = key;
-            Name      = name;
-            Uri       = uri;
-            Namespace = @namespace;
+            Key              = key;
+            Name             = name;
+            ConnectionString = connectionString;
         }
     }
 }

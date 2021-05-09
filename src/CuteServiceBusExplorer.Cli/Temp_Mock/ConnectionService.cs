@@ -41,16 +41,20 @@ namespace CuteServiceBusExplorer.Cli.Temp_Mock
         };
         public Task<GetConnectionsResponse> GetConnectionsAsync()
         {
-            var result = new GetConnectionsResponse();
-            result.Connections = connections.ToArray();
+            var result = new GetConnectionsResponse
+            {
+                Connections = connections.ToArray()    
+            };
 
             return Task.FromResult(result);
         }
         
         public Task<GetConnectionsResponse> GetConnectionsAsync(IEnumerable<string> keys)
         {
-            var result = new GetConnectionsResponse();
-            result.Connections = connections.Where(c => keys.Contains(c.Key)).ToArray();
+            var result = new GetConnectionsResponse
+            {
+                Connections = connections.Where(c => keys.Contains(c.Key)).ToArray()
+            };
 
             return Task.FromResult(result);
         }
@@ -62,6 +66,21 @@ namespace CuteServiceBusExplorer.Cli.Temp_Mock
             result.Connection = conn;
 
             return Task.FromResult(result);
+        }
+
+        public Task<bool> TryRemoveConnectionAsync(string key)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public Task<IEnumerable<string>> PurgeConnectionsAsync()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public Task<bool> TryAddConnection(string key, string name, string connectionString)
+        {
+            throw new System.NotImplementedException();
         }
 
         public Task<bool> RemoveConnectionAsync(string key)
