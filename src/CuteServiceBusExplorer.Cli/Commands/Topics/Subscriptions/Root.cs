@@ -2,13 +2,13 @@ using System.Threading.Tasks;
 using McMaster.Extensions.CommandLineUtils;
 using Microsoft.Extensions.Logging;
 
-namespace CuteServiceBusExplorer.Cli.Commands.Topics
+namespace CuteServiceBusExplorer.Cli.Commands.Topics.Subscriptions
 {
     [Command(
-        Name = "topics", 
+        Name = "subscriptions", 
         UnrecognizedArgumentHandling = UnrecognizedArgumentHandling.Throw , 
         OptionsComparison = System.StringComparison.InvariantCultureIgnoreCase)]
-    [Subcommand(typeof(List), typeof(Subscriptions.Root))]
+    [Subcommand(typeof(List))]
     public class Root : BaseCommand
     {
         public Root(ILogger<Root> logger, IConsole console) : base(logger, console) {}

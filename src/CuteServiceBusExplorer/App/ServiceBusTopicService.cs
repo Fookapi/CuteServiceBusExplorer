@@ -28,11 +28,16 @@ namespace CuteServiceBusExplorer.App
                 Name              = x.Name,
                 AutoDelete        = x.AutoDeleteOnIdle,
                 CurrentSizeBytes  = default,
-                MaximumSizeBytes  = x.MaxSizeInMegabytes,
+                MaximumSizeBytes  = x.MaxSizeInMegabytes * 1024L * 1024L,
                 MessageTimeToLive = x.MessageTimeToLive
             }).ToArray();
 
             return response;
+        }
+
+        public Task<GetSubscriptionsForTopicResponse> GetSubscriptionsForTopic(string topic, string connectionKey)
+        {
+            throw new System.NotImplementedException();
         }
 
         private async Task<ServiceBusExplorer> CreateServiceBusExplorer(string connectionKey)

@@ -4,7 +4,6 @@ using CuteServiceBusExplorer.Interface;
 using McMaster.Extensions.CommandLineUtils;
 using Microsoft.Extensions.Logging;
 using Spectre.Console;
-using AnsiConsole = Spectre.Console.AnsiConsole;
 
 namespace CuteServiceBusExplorer.Cli.Commands.Topics
 {
