@@ -1,4 +1,5 @@
-using System.ComponentModel.DataAnnotations;
+using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using CuteServiceBusExplorer.Interface;
 using McMaster.Extensions.CommandLineUtils;
@@ -7,47 +8,80 @@ using Spectre.Console;
 
 namespace CuteServiceBusExplorer.Cli.Commands.Topics.Subscriptions
 {
-
     [Command(
-        Name = "list",
+        Name = "peek",
         UnrecognizedArgumentHandling = UnrecognizedArgumentHandling.Throw,
-        OptionsComparison = System.StringComparison.InvariantCultureIgnoreCase)]
-    public class List : BaseConnectedCommand
+        OptionsComparison = System.StringComparison.InvariantCultureIgnoreCase, 
+        ExtendedHelpText = "Note: Either a summary of messages will be displayed with --list or message details will be displayed by providing options for --sequenceNumber and/or arguments for messageIds.")]
+    public class Peek : BaseConnectedCommand
     {
+        private const int DefaultListDepth = 32;
+        private const int MinimumListDepth = 1;
+        private const int MaximumListDepth = 100;
         private readonly ITopicService _topicService;
 
-        [Required]
-        [Argument(order: 0, Description = "[Required] The name of the Azure Service Bus topic to get subscriptions for",
-            Name = "sub", ShowInHelpText = true)]
-        public string Topic { get; set; }
-
         [Option(CommandOptionType.NoValue, ShortName = "u", LongName = "unformatted",
-            Description = "Don't show formatted output, only print subscription names.", ShowInHelpText = true)]
+            Description = "Don't show formatted output, only print message IDs or message bodies.", ShowInHelpText = true)]
         public bool Unformatted { get; set; } = false;
 
-        public List(ITopicService topicService, ILogger<List> logger, IConsole console) : base(logger, console)
+        [Option(CommandOptionType.SingleOrNoValue, ShortName = "l", LongName = "list",
+            Description = "Peek this amount of messages deep and display in a summary. The depth to peek can be provided with --list=50 with allowable values in the range [1..100]. Default = 32", ShowInHelpText = true)]
+        public (bool hasValue, int? value) List { get; set; }
+
+        [Option(CommandOptionType.MultipleValue, ShortName = "s", LongName = "sequenceNumber",
+            Description = "Peek full message(s) at sequence number(s).", ShowInHelpText = true)]
+        public int[] SequenceNumber { get; set; }
+        
+        [Option(CommandOptionType.SingleValue, ShortName = "o", LongName = "outputPath",
+            Description = "Output messages selected through either --sequenceNumber or message ID arguments directly to JSON formed file. Note symbols like tilde need to be expanded by your shell before being passed to this option and using this option with an equal sign (eg. --outputPath=~/myFile) might cause your shell not expand this path properly.", ShowInHelpText = true)]
+        public string OutputPath { get; set; }
+        
+        [Argument(order: 0, Description = "The message IDs to peek and show full message for",
+            Name = "messageIds", ShowInHelpText = true)]
+        public string[] MessageIds { get; set; }
+
+        public Peek(ITopicService topicService, ILogger<List> logger, IConsole console) : base(logger, console)
         {
             _topicService = topicService;
         }
 
         protected override async Task<int> OnExecuteAsync(CommandLineApplication app)
         {
-            if (string.IsNullOrWhiteSpace(Topic))
+            bool isList = List.hasValue;
+            bool isSequenceNumbers = SequenceNumber?.Any() ?? false;
+            bool isMessageIds = MessageIds?.Any() ?? false;
+            bool isDetailsRequest = isSequenceNumbers || isMessageIds;
+            bool outputToFileRequested = !string.IsNullOrWhiteSpace(OutputPath);
+
+            if (isList && isDetailsRequest)
             {
-                AnsiConsole.MarkupLine("[darkorange]Please provide a topic name as an argument.[/]");
+                AnsiConsole.MarkupLine("[darkorange]Please provide details to peek specific messages (--sequenceNumber and/or messageIds arguments) or request a summary with --list. Not both.[/]");
+                return await ExitCodesResult.TaskForCommandLineUsageError;
+            }
+            if(!isList && !isDetailsRequest)
+            {
+                AnsiConsole.MarkupLine("[darkorange]Please provide details to peek specific messages (--sequenceNumber and/or messageIds arguments) or request a summary with --list.[/]");
                 return await ExitCodesResult.TaskForCommandLineUsageError;
             }
 
-            var subscriptionResponse = await _topicService.GetSubscriptionsForTopic(Topic, ConnectionKey);
+            if(outputToFileRequested)
+                AnsiConsole.MarkupLine($"[default]Output to be written to path {Path.GetFullPath(OutputPath)} as a JSON object.[/]");
+            
+            if (isList)
+            {
+                int listDepth = List.value ?? DefaultListDepth;
 
-            if (subscriptionResponse?.Subscriptions == null)
-                return await ExitCodesResult.TaskForSuccess;
-
-            if (Unformatted)
-                RenderPlainTopics(subscriptionResponse);
-            else
-                RenderFormattedTopics(subscriptionResponse);
-
+                if (listDepth < MinimumListDepth || listDepth > MaximumListDepth)
+                {
+                    AnsiConsole.MarkupLine($"[darkorange]List depth of {listDepth:N0} is not a valid value. Please provide a list depth for the --list option in the range [[{MinimumListDepth}..{MaximumListDepth}]].[/]");
+                    return await ExitCodesResult.TaskForCommandLineUsageError;
+                }
+            }
+            
+            
+            
+            
+            
             return await ExitCodesResult.TaskForSuccess;
         }
 

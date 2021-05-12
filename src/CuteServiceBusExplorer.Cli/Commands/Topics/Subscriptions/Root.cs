@@ -8,7 +8,7 @@ namespace CuteServiceBusExplorer.Cli.Commands.Topics.Subscriptions
         Name = "subscriptions", 
         UnrecognizedArgumentHandling = UnrecognizedArgumentHandling.Throw , 
         OptionsComparison = System.StringComparison.InvariantCultureIgnoreCase)]
-    [Subcommand(typeof(List))]
+    [Subcommand(typeof(List), typeof(Peek))]
     public class Root : BaseCommand
     {
         public Root(ILogger<Root> logger, IConsole console) : base(logger, console) {}

@@ -12,6 +12,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Serilog;
 using Serilog.Extensions.Logging;
+using Spectre.Console;
 
 namespace CuteServiceBusExplorer.Cli
 {
@@ -54,6 +55,7 @@ namespace CuteServiceBusExplorer.Cli
             catch(Exception ex)
             {
                 serilog.Fatal(ex, "Uncaught exception");
+                AnsiConsole.MarkupLine($"[darkorange]Error: {ex.Message}[/]");
                 return (int)ExitCodes.GeneralError;
             }
         }
